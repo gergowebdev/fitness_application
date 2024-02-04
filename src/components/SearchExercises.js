@@ -4,6 +4,7 @@ import { exerciseOptions, fetchData } from "../utils/fetchData";
 
 const SearchExercises = () => {
     const [search, setSearch] = useState("");
+
     const handleSearch = async () => {
         if (search) {
             const exercisesData = await fetchData(
@@ -37,9 +38,7 @@ const SearchExercises = () => {
                     }}
                     height="76px"
                     value={search}
-                    onChange={(e) =>
-                        setSearch(e.target.value.toLocaleLowerCase())
-                    }
+                    onChange={(e) => setSearch(e.target.value.toLowerCase())}
                     placeholder="Search Exercises"
                     type="text"
                 />
