@@ -9,6 +9,8 @@ import SimilarExercises from "../components/SimilarExercises";
 const ExerciseDetail = () => {
     const [exerciseDetail, setExerciseDetail] = useState({});
     const [exerciseVideos, setExerciseVideos] = useState([]);
+    const [targetMuscleExercises, setTargetMuscleExercises] = useState([]);
+    const [equipmentExercises, setEquipmentExercises] = useState([]);
     const { id } = useParams();
 
     useEffect(() => {
@@ -17,17 +19,33 @@ const ExerciseDetail = () => {
             const youtubeSearchUrl =
                 "https://youtube-search-and-download.p.rapidapi.com";
 
+            // 1st API call
             const exerciseDetailData = await fetchData(
                 `${exerciseDbUrl}/exercises/exercise/${id}`,
                 exerciseOptions
             );
             setExerciseDetail(exerciseDetailData);
 
+            //2nd API call
             const exerciseVideosData = await fetchData(
                 `${youtubeSearchUrl}/search?query=${exerciseDetailData.name}`,
                 youtubeOptions
             );
             setExerciseVideos(exerciseVideosData.contents);
+
+            // 3rd API call
+            const targetMuscleExercisesData = await fetchData(
+                `${exerciseDbUrl}/exercises/target/${exerciseDetailData.target}`,
+                exerciseOptions
+            );
+            setTargetMuscleExercises(targetMuscleExercisesData);
+
+            // 4th API call
+            const equipmentExercisesData = await fetchData(
+                `${exerciseDbUrl}/exercises/equipment/${exerciseDetailData.equipment}`,
+                exerciseOptions
+            );
+            setEquipmentExercises(equipmentExercisesData);
         };
 
         fetchExercisesData();
@@ -40,7 +58,10 @@ const ExerciseDetail = () => {
                 exerciseVideos={exerciseVideos}
                 name={exerciseDetail.name}
             />
-            <SimilarExercises />
+            <SimilarExercises
+                targetMuscleExercises={targetMuscleExercises}
+                equipmentExercises={equipmentExercises}
+            />
         </Box>
     );
 };
